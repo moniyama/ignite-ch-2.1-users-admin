@@ -1,0 +1,194 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Simple users API",
+    "description": "This is a simple admin users API",
+    "contact": {
+      "email": "monicasayama@ygmail.com"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version": "1.0.0"
+  },
+  "tags": [
+    {
+      "name": "users",
+      "description": "Users management"
+    }
+  ],
+  "paths": {
+    "/users": {
+      "post": {
+        "tags": [
+          "users"
+        ],
+        "summary": "create new user",
+        "operationId": "createUser",
+        "requestBody": {
+          "description": "Create new user",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/users_body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Operação realizada com sucesso,",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/user"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "email already in use",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                },
+                "example": {
+                  "error": "Usuário já cadastrado"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "summary": "list users",
+        "description": "Somente usuário admin pode acessar",
+        "operationId": "listUsers",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "uui"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operação realizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/user"
+                  },
+                  "example": [{
+                    "id": "d290f1ee-6c54-4b01-90e6-d701748f0851",
+                    "name":"Widget Adapter",
+                    "email": "widget@email.com",
+                    "admin": false,
+                    "created_at": "2016-08-29T09:12:33.001Z",
+                    "updated_at": "2016-08-29T09:12:33.001Z"
+                  }, {
+                    "id": "04e01b97-1e1a-49ff-af35-21f5a20975b1",
+                    "name":"Ada Lovelace",
+                    "email": "ada@email.com",
+                    "admin": true,
+                    "created_at": "2016-08-29T09:14:36.001Z",
+                    "updated_at": "2016-08-29T09:14:36.001Z"
+                  }]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Usuário não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type":"object",
+                  "$ref": "#/components/schemas/error"
+                },
+                "example": {
+                  "error": "Usuário inexistente"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "user": {
+        "required": [
+          "email",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "d290f1ee-6c54-4b01-90e6-d701748f0851"
+          },
+          "name": {
+            "type": "string",
+            "example": "Widget Adapter"
+          },
+          "email": {
+            "type": "string",
+            "example": "widget@email.com"
+          },
+          "admin": {
+            "type": "boolean",
+            "example": false
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2016-08-29T09:12:33.001Z"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2016-08-29T09:12:33.001Z"
+          }
+        }
+      },
+      "users_body": {
+        "required": [
+          "email",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Widget Adapter"
+          },
+          "email": {
+            "type": "string",
+            "example": "widget@email.com"
+          }
+        }
+      },
+      "error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
